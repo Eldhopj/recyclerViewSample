@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * needs Apdater and View Holder
+ * needs Adapter and View Holder
  *      View Holder : used to caches the data and no need to write findViewById for each items
  *      Adapter : populates the item  and data about it , data comes from n/w or from DB
  * We create an interface to pass the values of the item clicked into activity
@@ -19,14 +19,15 @@ import java.util.List;
  */
 public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> { //Adapter
 
-    //ModelClass and its constructor
-    List<ModelClass> listItems; // List
-    Context context;
+
+    List<ModelClass> mListItems; // List
+    Context mContext;
     private OnItemClickListener mListener; // Listener for the OnItemClickListener interface
 
+    //constructor
     public Adapter(List<ModelClass> listItems, Context context) { // constructor
-        this.listItems = listItems;
-        this.context = context;
+        this.mListItems = listItems;
+        this.mContext = context;
     }
 
     /**
@@ -51,14 +52,17 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> { //Adapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {//populate the data into the list_item (View Holder), as we scroll
         /**Binding data to the list_item*/
-        ModelClass listitem = listItems.get(position);
+        ModelClass listitem = mListItems.get(position);
         holder.headTv.setText(listitem.getHead());
         holder.descTv.setText(listitem.getDesc());
     }
 
     @Override
     public int getItemCount() { // return the size of the list view , NOTE : this must be a fast process
-        return listItems.size();
+        if (mListItems == null) {
+            return 0;
+        }
+        return mListItems.size();
     }
 
     //View Holder class caches these references that gonna modify in the adapter
