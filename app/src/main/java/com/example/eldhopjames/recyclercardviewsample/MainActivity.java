@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +15,14 @@ import java.util.List;
  3.Create an layout for the items (list_liem.xml)
     4.Model Class
  5.Bind the data with recycler view using an mAdapter
- 6.Implement the Adapter.OnItemClickListener and handle the mRecyclerView Item click then pass the value to the DetailedActivity
+ 6. By using setOnItemClickListener handle the mRecyclerView Item click then pass the value to the DetailedActivity
 **/
 
-public class MainActivity extends AppCompatActivity implements Adapter.OnItemClickListener {//Implement the OnItemClickListener interface
+public class MainActivity extends AppCompatActivity {
 
     //Define the variables
     private RecyclerView mRecyclerView;
-    private List<ModelClass> mListitems;
+    private List<ModelClass> mListItems;
     private Adapter mAdapter;
 
     //Key constants for intentExtra
@@ -40,35 +41,38 @@ public class MainActivity extends AppCompatActivity implements Adapter.OnItemCli
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this)); //it can be GridLayoutManager or StaggeredGridLayoutManager
 
         /**Inside this list item we get all our values*/
-        mListitems = new ArrayList<>();
+        mListItems = new ArrayList<>();
 
         //dummy data
         for (int i = 1; i<10; i++) {
             ModelClass listItem =new ModelClass(
                     "Heading "+i,"Dummy description"
             );
-            mListitems.add(listItem);                               /** adding dummy data into the List*/
+            mListItems.add(listItem);                               /** adding dummy data into the List*/
         }
         //dummy data ends here
 
         /**set the mAdapter to the recycler view*/
-        mAdapter = new Adapter(mListitems, this);
+        mAdapter = new Adapter(mListItems, this);
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(this); // For item onclick
+
+        /**
+         * Handles the recycler view item clicks
+         */
+        mAdapter.setOnItemClickListener(new Adapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                // Here we start our detailed activity and pass the values of the clicked item into it
+                Intent detailedActivityIntent = new Intent(getApplicationContext(), DetailedActivity.class);
+                ModelClass clickedItem = mListItems.get(position); // We get the item at the clicked position out of our list items
+
+                detailedActivityIntent.putExtra(HEADING, clickedItem.getHead());
+                detailedActivityIntent.putExtra(DESCRIPTION, clickedItem.getDesc());
+
+                startActivity(detailedActivityIntent);
+            }
+        });
     }
 
-    /**
-     * Handles the recycler view item clicks
-     */
-    @Override
-    public void onItemClick(int position) {
-        // Here we start our detailed activity and pass the values of the clicked item into it
-        Intent detailedActivityIntent = new Intent(this, DetailedActivity.class);
-        ModelClass clickedItem = mListitems.get(position); // We get the item at the clicked position out of our list items
-
-        detailedActivityIntent.putExtra(HEADING, clickedItem.getHead());
-        detailedActivityIntent.putExtra(DESCRIPTION, clickedItem.getDesc());
-
-        startActivity(detailedActivityIntent);
-    }
 }

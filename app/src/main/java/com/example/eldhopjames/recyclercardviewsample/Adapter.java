@@ -34,7 +34,7 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> { //Adapt
      * interface will forward our click from adapter to our main activity
      */
     public interface OnItemClickListener {
-        void onItemClick(int position);
+         void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -66,7 +66,7 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> { //Adapt
     }
 
     //View Holder class caches these references that gonna modify in the adapter
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
         /**Define viewHolder views (list_item) here*/
         public TextView headTv;
         public TextView descTv;
@@ -85,7 +85,7 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> { //Adapt
                     if (mListener != null) {
                         int position = getAdapterPosition(); // Get the index of the view holder
                         if (position != RecyclerView.NO_POSITION) { // Makes sure this position is still valid
-                            mListener.onItemClick(position); // we catch the click on the item view then pass it over the interface and then to our activity
+                            mListener.onItemClick(v,position); // we catch the click on the item view then pass it over the interface and then to our activity
                         }
                     }
 
