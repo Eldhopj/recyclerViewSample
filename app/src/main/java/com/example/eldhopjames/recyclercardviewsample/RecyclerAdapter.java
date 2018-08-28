@@ -11,21 +11,21 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * needs Adapter and View Holder
+ * needs RecyclerAdapter and View Holder
  *      View Holder : used to caches the data and no need to write findViewById for each items
- *      Adapter : populates the item  and data about it , data comes from n/w or from DB
+ *      RecyclerAdapter : populates the item  and data about it , data comes from n/w or from DB
  * We create an interface to pass the values of the item clicked into activity
  *
  */
-public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> { //Adapter
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> { //RecyclerAdapter
 
 
-    List<ModelClass> mListItems; // List
-    Context mContext;
+    private List<ModelClass> mListItems; // List
+    private Context mContext;
     private OnItemClickListener mListener; // Listener for the OnItemClickListener interface
 
     //constructor
-    public Adapter(List<ModelClass> listItems, Context context) { // constructor
+    public RecyclerAdapter(List<ModelClass> listItems, Context context) { // constructor
         this.mListItems = listItems;
         this.mContext = context;
     }
@@ -46,6 +46,11 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> { //Adapt
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {// this method calls when ever our view method is created , ie; the instance of ViewHolder class is created
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item, parent, false); /**list_item-> is the Card view which holds the data in the recycler view*/
+
+//                //NOTE : use this if items height and width not following the match_parent or wrap_content
+//                RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+//                view.setLayoutParams(layoutParams);
+
         return new ViewHolder(view);
     }
 
@@ -66,13 +71,13 @@ public class Adapter  extends RecyclerView.Adapter<Adapter.ViewHolder> { //Adapt
     }
 
     //View Holder class caches these references that gonna modify in the adapter
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
         /**Define viewHolder views (list_item) here*/
-        public TextView headTv;
-        public TextView descTv;
+        TextView headTv;
+        TextView descTv;
 
         //create a constructor with itemView as a params
-        public ViewHolder(View itemView) { // with the help of "itemView" we ge the views from xml
+        ViewHolder(View itemView) { // with the help of "itemView" we ge the views from xml
             super(itemView);
             /**bind views*/
             headTv = itemView.findViewById(R.id.heading);
