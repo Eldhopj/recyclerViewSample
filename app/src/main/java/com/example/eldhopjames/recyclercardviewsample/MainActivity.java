@@ -42,11 +42,12 @@ public class MainActivity extends AppCompatActivity {
 
         /**Inside this list item we get all our values*/
         mListItems = new ArrayList<>();
+
         addBtn = findViewById(R.id.button_add);
         removeBtn = findViewById(R.id.button_remove);
         editText = findViewById(R.id.editText);
 
-        initRecyclerView();
+        initRecyclerView(mListItems);
         dummyData();
 
                 /**
@@ -83,8 +84,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /**Initializing recyclerView*/
-    private void initRecyclerView(){
+    /**Initializing recyclerView
+     * @param listItems -> contains all the elements*/
+    private void initRecyclerView(List<ModelClass> listItems){
         /**bind with xml*/
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true); // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false)); //it can be GridLayoutManager or StaggeredGridLayoutManager
 
         /**set the mRecyclerAdapter to the recycler view*/
-        mRecyclerAdapter = new RecyclerAdapter(mListItems, this);
+        mRecyclerAdapter = new RecyclerAdapter(listItems, this);
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }
