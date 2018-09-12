@@ -20,6 +20,10 @@ import java.util.List;
     4.Model Class
  5.Bind the data with recycler view using an mRecyclerAdapter
  6. By using setOnItemClickListener handle the mRecyclerView Item click then pass the value to the DetailedActivity
+
+ Parcelable
+ 1.Implement Parcelable in ModelClass and import all methods
+ 2.Send parcel position into DetailedActivity from MainActivity
 **/
 
 public class MainActivity extends AppCompatActivity {
@@ -32,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
     EditText editText;
 
     //Key constants for intentExtra
-    public static final String HEADING = "heading";
-    public static final String DESCRIPTION = "desc";
+    public static final String ITEM = "item";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +62,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         // Here we start our detailed activity and pass the values of the clicked item into it
                         Intent detailedActivityIntent = new Intent(getApplicationContext(), DetailedActivity.class);
-                        ModelClass clickedItem = mListItems.get(position); // We get the item at the clicked position out of our list items
-
-                        detailedActivityIntent.putExtra(HEADING, clickedItem.getHead());
-                        detailedActivityIntent.putExtra(DESCRIPTION, clickedItem.getDesc());
-
+                        detailedActivityIntent.putExtra(ITEM,
+                                mListItems.get(position)); // Get the position of the clicked item
                         startActivity(detailedActivityIntent);
                     }
                 });
