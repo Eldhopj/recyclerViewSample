@@ -51,8 +51,9 @@ public class MainActivity extends AppCompatActivity {
         removeBtn = findViewById(R.id.button_remove);
         editText = findViewById(R.id.editText);
 
-        initRecyclerView(mListItems);
+        initRecyclerView();
         dummyData();
+        gesture();
 
                 /**
                  * Handles the recycler view item clicks
@@ -67,27 +68,10 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(detailedActivityIntent);
                     }
                 });
-
-        /**
-         * Swipe Right gesture to remove the item from the recycler view
-         * */
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                removeItem(viewHolder.getAdapterPosition()); // Passing the position into the remove function
-            }
-        }).attachToRecyclerView(mRecyclerView); // Attach it to the recycler view
-
     }
 
-    /**Initializing recyclerView
-     * @param listItems -> contains all the elements*/
-    private void initRecyclerView(List<ModelClass> listItems){
+    /**Initializing recyclerView*/
+    private void initRecyclerView(){
         /**bind with xml*/
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true); // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
@@ -95,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false)); //it can be GridLayoutManager or StaggeredGridLayoutManager
 
         /**set the mRecyclerAdapter to the recycler view*/
-        mRecyclerAdapter = new RecyclerAdapter(listItems, this);
+        mRecyclerAdapter = new RecyclerAdapter(this);
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }
@@ -111,45 +95,43 @@ public class MainActivity extends AppCompatActivity {
         }
         //dummy data ends here
 
-        mRecyclerAdapter.notifyDataSetChanged();
-    }
-
-    public void add(View view) {
-        Log.d(TAG, "add: ");
-        int position = Integer.parseInt(editText.getText().toString());
-        addItem(position);
+        mRecyclerAdapter.setData(mListItems);
     }
 
     /**Adding item into a position of RecyclerView*/
-    private void addItem(int position) {
+    public void add(View view) {
+        Log.d(TAG, "add: ");
+        int position = Integer.parseInt(editText.getText().toString());
         /**@params -> position to where we need to add the item, NOTE : It is optional
          @params -> passing the values into the model class
          */
-        mListItems.add( position, new ModelClass("Heading"+Integer.toString(position)," New Item"));
-
-        //notifyDataSetChanged refreshes the entire recycler view rather than updating it
-        //mRecyclerAdapter.notifyDataSetChanged();
-
-        //If we know the position to be inserted use
-        mRecyclerAdapter.notifyItemInserted(position);
-    }
-
-    public void remove(View view) {
-        Log.d(TAG, "remove: ");
-        int position = Integer.parseInt(editText.getText().toString());
-        removeItem(position);
+        ModelClass modelClass = new ModelClass("Heading"+Integer.toString(position)," New Item");
+        mRecyclerAdapter.addItem(position,modelClass);
     }
 
     /**Removing an item from a position of RecyclerView*/
-    private void removeItem(int position) {
-       /** @params -> position to where we need to add the item*/
-        mListItems.remove(position);
+    public void remove(View view) {
+        Log.d(TAG, "remove: ");
+        int position = Integer.parseInt(editText.getText().toString());
+        /** @params -> position to where we need to add the item*/
+        mRecyclerAdapter.removeItem(position);
+    }
 
-        //notifyDataSetChanged refreshes the entire recycler view rather than updating it
-        //mRecyclerAdapter.notifyDataSetChanged();
+    /**
+     * Swipe Right gesture to remove the item from the recycler view
+     * */
+    private void gesture(){
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-        //If we know the position to be removed use
-        mRecyclerAdapter.notifyItemRemoved(position);
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                mRecyclerAdapter.removeItem(viewHolder.getAdapterPosition()); // Passing the position into the remove function
+            }
+        }).attachToRecyclerView(mRecyclerView); // Attach it to the recycler view
     }
 
 

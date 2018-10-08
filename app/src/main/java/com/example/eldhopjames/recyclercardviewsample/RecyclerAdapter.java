@@ -25,8 +25,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private OnItemClickListener mListener; // Listener for the OnItemClickListener interface
 
     //constructor
-    public RecyclerAdapter(List<ModelClass> listItems, Context context) { // constructor
-        this.mListItems = listItems;
+    public RecyclerAdapter( Context context) { // constructor
         this.mContext = context;
     }
 
@@ -58,8 +57,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {//populate the data into the list_item (View Holder), as we scroll
         /**Binding data to the list_item*/
         ModelClass listitem = mListItems.get(position);
-        holder.headTv.setText(listitem.getHead());
-        holder.descTv.setText(listitem.getDesc());
+        if ( listitem != null) {
+            holder.headTv.setText(listitem.getHead());
+            holder.descTv.setText(listitem.getDesc());
+        }
     }
 
     @Override
@@ -79,7 +80,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         //create a constructor with itemView as a params
         ViewHolder(View itemView) { // with the help of "itemView" we ge the views from xml
             super(itemView);
-            /**bind views*/
+            //bind views
             headTv = itemView.findViewById(R.id.heading);
             descTv = itemView.findViewById(R.id.description);
 
@@ -97,5 +98,31 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }
             });
         }
+    }
+
+    //-------------------------------------Manipulating RecyclerView--------------------------------//
+    public void setData(List<ModelClass> items) {
+        mListItems = items;
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(int position){
+        mListItems.remove(position);
+
+        //notifyDataSetChanged refreshes the entire recycler view rather than updating it
+        //mRecyclerAdapter.notifyDataSetChanged();
+
+        //If we know the position to be removed use
+        notifyItemRemoved(position);
+    }
+
+    public void addItem(int position,ModelClass modelClass){
+        mListItems.add( position,modelClass);
+
+        //notifyDataSetChanged refreshes the entire recycler view rather than updating it
+        //mRecyclerAdapter.notifyDataSetChanged();
+
+        //If we know the position to be inserted use
+        notifyItemInserted(position);
     }
 }
