@@ -1,4 +1,4 @@
-package com.example.eldhopjames.recyclercardviewsample;
+package com.example.eldhopjames.recyclercardviewsample.activities;
 /**
  * For showing the data on the items
  */
@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import static com.example.eldhopjames.recyclercardviewsample.MainActivity.ITEM;
+import com.example.eldhopjames.recyclercardviewsample.R;
+import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass;
+
+import static com.example.eldhopjames.recyclercardviewsample.activities.MainActivity.ITEM;
 
 public class DetailedActivity extends AppCompatActivity {
     TextView headTV, descTV;

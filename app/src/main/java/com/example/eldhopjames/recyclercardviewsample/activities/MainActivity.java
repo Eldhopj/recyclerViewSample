@@ -1,4 +1,4 @@
-package com.example.eldhopjames.recyclercardviewsample;
+package com.example.eldhopjames.recyclercardviewsample.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.eldhopjames.recyclercardviewsample.R;
+import com.example.eldhopjames.recyclercardviewsample.adapter.RecyclerAdapter;
+import com.example.eldhopjames.recyclercardviewsample.interfaces.OnItemClickListener;
+import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 /**
                  * Handles the recycler view item clicks
                  */
-                mRecyclerAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+                mRecyclerAdapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         // Here we start our detailed activity and pass the values of the clicked item into it
@@ -88,9 +93,16 @@ public class MainActivity extends AppCompatActivity {
     private void dummyData(){
         //dummy data
         for (int i = 0; i<10; i++) {
-            ModelClass listItem =new ModelClass(
-                    "Heading "+i,"Dummy description"
-            );
+            ModelClass listItem;
+            if (i%2 == 0) {
+                 listItem = new ModelClass(
+                        "Heading " + i, "Dummy description", 0
+                );
+            } else {
+                listItem = new ModelClass(
+                        "Heading " + i, "Dummy description", 1
+                );
+            }
             mListItems.add(listItem);                               /** adding dummy data into the List*/
         }
         //dummy data ends here
@@ -105,7 +117,13 @@ public class MainActivity extends AppCompatActivity {
         /**@params -> position to where we need to add the item, NOTE : It is optional
          @params -> passing the values into the model class
          */
-        ModelClass modelClass = new ModelClass("Heading"+Integer.toString(position)," New Item");
+        int typeValue; //for to determine which recycler layoutOut view has to populate
+        if (position%2 == 0){
+            typeValue = 0;
+        } else {
+            typeValue = 1;
+        }
+        ModelClass modelClass = new ModelClass("Heading"+Integer.toString(position)," New Item",typeValue);
         mRecyclerAdapter.addItem(position,modelClass);
     }
 
