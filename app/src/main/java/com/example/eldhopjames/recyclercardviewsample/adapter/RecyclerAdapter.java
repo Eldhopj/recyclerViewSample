@@ -1,11 +1,12 @@
 package com.example.eldhopjames.recyclercardviewsample.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eldhopjames.recyclercardviewsample.R;
 import com.example.eldhopjames.recyclercardviewsample.interfaces.OnItemClickListener;
@@ -89,10 +90,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() { // return the size of the list view , NOTE : this must be a fast process
-        if (mListItems == null) {
-            return 0;
-        }
-        return mListItems.size();
+        return mListItems == null ? 0 : mListItems.size();
     }
 
     private void setOddViewHolder(OddViewHolder oddViewHolder, int position) {
@@ -129,9 +127,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void addItem(int position,ModelClass modelClass){
         mListItems.add( position,modelClass);
-
-        //notifyDataSetChanged refreshes the entire recycler view rather than updating it
-        //mRecyclerAdapter.notifyDataSetChanged();
 
         //If we know the position to be inserted use
         notifyItemInserted(position);

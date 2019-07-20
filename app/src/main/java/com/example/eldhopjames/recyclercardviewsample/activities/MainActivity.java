@@ -2,14 +2,15 @@ package com.example.eldhopjames.recyclercardviewsample.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eldhopjames.recyclercardviewsample.R;
 import com.example.eldhopjames.recyclercardviewsample.adapter.RecyclerAdapter;
@@ -77,14 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
     /**Initializing recyclerView*/
     private void initRecyclerView(){
-        /**bind with xml*/
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true); // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false)); //it can be GridLayoutManager or StaggeredGridLayoutManager
+        mRecyclerView.setNestedScrollingEnabled(false);
 
-        /**set the mRecyclerAdapter to the recycler view*/
-        mRecyclerAdapter = new RecyclerAdapter(this);
+        mRecyclerAdapter = new RecyclerAdapter(this); //set the mRecyclerAdapter to the recycler view
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
         mRecyclerView.setAdapter(mRecyclerAdapter);
     }
@@ -109,6 +109,10 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerAdapter.setData(mListItems);
     }
+
+    /**
+     * For Pagination check : https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b
+     * */
 
     /**Adding item into a position of RecyclerView*/
     public void add(View view) {
