@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true); // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false)); //it can be GridLayoutManager or StaggeredGridLayoutManager
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false)); //it can be GridLayoutManager or StaggeredGridLayoutManager
         mRecyclerView.setNestedScrollingEnabled(false);
 
         mRecyclerAdapter = new RecyclerAdapter(this); //set the mRecyclerAdapter to the recycler view
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         }
         //dummy data ends here
 
-        mRecyclerAdapter.setData(mListItems);
+        mRecyclerAdapter.addItemRange(mListItems);
     }
 
     /**
@@ -128,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             typeValue = 1;
         }
         ModelClass modelClass = new ModelClass("Heading"+Integer.toString(position)," New Item",typeValue);
-        mRecyclerAdapter.addItem(position,modelClass);
+        mRecyclerAdapter.addItem(modelClass, position);
     }
 
     /**Removing an item from a position of RecyclerView*/
@@ -145,12 +146,12 @@ public class MainActivity extends AppCompatActivity {
     private void gesture(){
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
             @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 mRecyclerAdapter.removeItem(viewHolder.getAdapterPosition()); // Passing the position into the remove function
             }
         }).attachToRecyclerView(mRecyclerView); // Attach it to the recycler view

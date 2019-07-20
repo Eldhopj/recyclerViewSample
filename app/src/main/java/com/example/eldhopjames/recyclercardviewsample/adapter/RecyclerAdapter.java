@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.eldhopjames.recyclercardviewsample.R;
 import com.example.eldhopjames.recyclercardviewsample.interfaces.OnItemClickListener;
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass;
+import com.example.eldhopjames.recyclercardviewsample.viewHolders.EmptyViewHolder;
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.EvenViewHolder;
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.OddViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,12 +25,13 @@ import java.util.List;
  * We create an interface to pass the values of the item clicked into activity
  *
  */
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> { //RecyclerAdapter
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    private List<ModelClass> mListItems; // List
+    private List<ModelClass> mListItems = new ArrayList<>();
     private Context mContext;
-    private OnItemClickListener mListener; // Listener for the OnItemClickListener interface
+    private int totalListItems = 0;
+    private OnItemClickListener mListener;
 
     //constructor
     public RecyclerAdapter( Context context) { // constructor
@@ -46,23 +49,29 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { // this method calls when ever our view method is created , ie; the instance of ViewHolder class is created
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
-        if (viewType == 1) {
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.odd_list_item, parent, false); /**odd_list_item-> is the Card view which holds the data in the recycler view*/
-            return new EvenViewHolder(view, mListener);
-        }
-        else {
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.even_list_item, parent, false);
-            return new OddViewHolder(view, mListener);
-        }
+        switch (viewType) {
+            case 0:
+                view = inflater
+                        .inflate(R.layout.even_list_item, parent, false);
+                return new OddViewHolder(view, mListener);
+            case 1:
+                view = inflater
+                        .inflate(R.layout.odd_list_item, parent, false);
+                return new EvenViewHolder(view, mListener);
+            default:
+                view = inflater
+                        .inflate(R.layout.item_empty, parent, false);
+                return new EmptyViewHolder(view);
+
+
 //                //NOTE : use this if items height and width not following the match_parent or wrap_content
 //                RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 //                view.setLayoutParams(layoutParams);
+        }
     }
 
-    /**This method returns which layout has to be populated*/
     @Override
     public int getItemViewType(int position) {
         if (mListItems.get(position).getType() == 0){
@@ -89,7 +98,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public int getItemCount() { // return the size of the list view , NOTE : this must be a fast process
+    public int getItemCount() {
         return mListItems == null ? 0 : mListItems.size();
     }
 
@@ -110,25 +119,58 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     //-------------------------------------Manipulating RecyclerView--------------------------------//
-    public void setData(List<ModelClass> items) {
-        mListItems = items;
-        notifyDataSetChanged();
+    public void clearData() {
+        if (!mListItems.isEmpty()) {
+            mListItems.clear();
+            notifyDataSetChanged();
+            totalListItems = 0;
+        }
     }
 
-    public void removeItem(int position){
-        mListItems.remove(position);
-
-        //notifyDataSetChanged refreshes the entire recycler view rather than updating it
-        //mRecyclerAdapter.notifyDataSetChanged();
-
-        //If we know the position to be removed use
-        notifyItemRemoved(position);
+    public void addItemRange(List<ModelClass> items) {
+        if (items != null) {
+            int position = totalListItems;
+            mListItems.addAll(position, items);
+            notifyItemRangeInserted(position, items.size()); //items.size()+1 to disable auto scroll
+            totalListItems = mListItems.size();
+        }
     }
 
-    public void addItem(int position,ModelClass modelClass){
-        mListItems.add( position,modelClass);
+    public void addItemRangeInPosition(List<ModelClass> items, int position) {
+        if (items != null) {
+            if (totalListItems >= position) {
+                mListItems.addAll(position, items);
+                notifyItemRangeInserted(position, items.size());
+            } else {
+                mListItems.addAll(items);
+                notifyItemRangeInserted(totalListItems - 1, items.size());
+            }
+            totalListItems = mListItems.size();
+        }
+    }
 
-        //If we know the position to be inserted use
-        notifyItemInserted(position);
+    public void addItem(ModelClass item, int position) {
+        if (item != null) {
+            if (totalListItems >= position) {
+                mListItems.add(position, item);
+                notifyItemInserted(position);
+            } else {
+                mListItems.add(item);
+                notifyItemInserted(totalListItems - 1);
+            }
+            ++totalListItems;
+        }
+    }
+
+    public void removeItem(int position) {
+        if (totalListItems >= position) {
+            mListItems.remove(position);
+            notifyItemRemoved(position);
+        } else {
+            int newPosition = totalListItems - 1;
+            mListItems.remove(newPosition);
+            notifyItemRemoved(newPosition);
+        }
+        --totalListItems;
     }
 }
