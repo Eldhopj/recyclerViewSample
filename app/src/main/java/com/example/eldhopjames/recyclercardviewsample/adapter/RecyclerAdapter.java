@@ -28,9 +28,8 @@ import java.util.List;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    private List<ModelClass> mListItems = new ArrayList<>();
-    private Context mContext;
-    private int totalListItems = 0;
+    private final List<ModelClass> mListItems = new ArrayList<>();
+    private final Context mContext;
     private OnItemClickListener mListener;
 
     //constructor
@@ -99,7 +98,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mListItems == null ? 0 : mListItems.size();
+        return mListItems.size();
     }
 
     private void setOddViewHolder(OddViewHolder oddViewHolder, int position) {
@@ -123,54 +122,49 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (!mListItems.isEmpty()) {
             mListItems.clear();
             notifyDataSetChanged();
-            totalListItems = 0;
         }
     }
 
     public void addItemRange(List<ModelClass> items) {
         if (items != null) {
-            int position = totalListItems;
+            int position = mListItems.size();
             mListItems.addAll(position, items);
-            notifyItemRangeInserted(position, items.size()); //items.size()+1 to disable auto scroll
-            totalListItems = mListItems.size();
+            notifyItemRangeInserted(position, items.size());
         }
     }
 
     public void addItemRangeInPosition(List<ModelClass> items, int position) {
         if (items != null) {
-            if (totalListItems >= position) {
+            if (mListItems.size() >= position) {
                 mListItems.addAll(position, items);
                 notifyItemRangeInserted(position, items.size());
             } else {
                 mListItems.addAll(items);
-                notifyItemRangeInserted(totalListItems - 1, items.size());
+                notifyItemRangeInserted(mListItems.size() - 1, items.size());
             }
-            totalListItems = mListItems.size();
         }
     }
 
     public void addItem(ModelClass item, int position) {
         if (item != null) {
-            if (totalListItems >= position) {
+            if (mListItems.size() >= position) {
                 mListItems.add(position, item);
                 notifyItemInserted(position);
             } else {
                 mListItems.add(item);
-                notifyItemInserted(totalListItems - 1);
+                notifyItemInserted(mListItems.size() - 1);
             }
-            ++totalListItems;
         }
     }
 
     public void removeItem(int position) {
-        if (totalListItems >= position) {
+        if (mListItems.size() >= position) {
             mListItems.remove(position);
             notifyItemRemoved(position);
         } else {
-            int newPosition = totalListItems - 1;
+            int newPosition = mListItems.size() - 1;
             mListItems.remove(newPosition);
             notifyItemRemoved(newPosition);
         }
-        --totalListItems;
     }
 }
