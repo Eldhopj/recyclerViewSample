@@ -158,7 +158,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void removeItem(int position) {
-        if (mListItems.size() >= position) {
+        if (mListItems.size() > position) {
             mListItems.remove(position);
             notifyItemRemoved(position);
         } else {
