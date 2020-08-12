@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.eldhopjames.recyclercardviewsample.R;
 import com.example.eldhopjames.recyclercardviewsample.interfaces.OnItemClickListener;
 
-public class OddViewHolder extends RecyclerView.ViewHolder{
-    /**Define viewHolder views (odd_list_item) here*/
+public class OddViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    /**
+     * Define viewHolder views (odd_list_item) here
+     */
     public TextView headTv;
     public TextView descTv;
     private OnItemClickListener mListener; // Listener for the OnItemClickListener interface
@@ -21,18 +23,18 @@ public class OddViewHolder extends RecyclerView.ViewHolder{
         //bind views
         headTv = itemView.findViewById(R.id.heading);
         descTv = itemView.findViewById(R.id.description);
-        /**Assigning on click listener on the item*/
-        itemView.setOnClickListener(new View.OnClickListener() { // we can handle the click as like we do in normal
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    int position = getAdapterPosition(); // Get the index of the view holder
-                    if (position != RecyclerView.NO_POSITION) { // Makes sure this position is still valid
-                        mListener.onItemClick(v,position); // we catch the click on the item view then pass it over the interface and then to our activity
-                    }
-                }
+        itemView.setOnClickListener(this);
+    }
 
+    @Override
+    public void onClick(View v) {
+        if (mListener != null) {
+            int position = getAdapterPosition(); // Get the index of the view holder
+            if (position != RecyclerView.NO_POSITION) { // Makes sure this position is still valid
+                if (v == itemView) {
+                    mListener.onItemClick(position); // we catch the click on the item view then pass it over the interface and then to our activity
+                }
             }
-        });
+        }
     }
 }

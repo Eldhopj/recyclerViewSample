@@ -24,22 +24,22 @@ import java.util.List;
 /**1.Add dependencies
  2. Add recycler view  in the layout where it needed
  3.Create an layout for the items (list_liem.xml)
-    4.Model Class
+ 4.Model Class
  5.Bind the data with recycler view using an mRecyclerAdapter
  6. By using setOnItemClickListener handle the mRecyclerView Item click then pass the value to the DetailedActivity
 
  Parcelable
  1.Implement Parcelable in ModelClass and import all methods
  2.Send parcel position into DetailedActivity from MainActivity
-**/
+ **/
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnItemClickListener {
     private static final String TAG = "MainActivity";
     //Define the variables
     private RecyclerView mRecyclerView;
     private List<ModelClass> mListItems;
     private RecyclerAdapter mRecyclerAdapter;
-    Button addBtn,removeBtn;
+    Button addBtn, removeBtn;
     EditText editText;
 
     //Key constants for intentExtra
@@ -61,26 +61,12 @@ public class MainActivity extends AppCompatActivity {
         initRecyclerView();
         dummyData();
         gesture();
-
-                /**
-                 * Handles the recycler view item clicks
-                 */
-                mRecyclerAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        // Here we start our detailed activity and pass the values of the clicked item into it
-                        Intent detailedActivityIntent = new Intent(getApplicationContext(), DetailedActivity.class);
-                        detailedActivityIntent.putExtra(ITEM,
-                                mListItems.get(position)); // Get the position of the clicked item
-                        startActivity(detailedActivityIntent);
-                    }
-                });
     }
 
     /**Initializing recyclerView*/
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         mRecyclerView = findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true); // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
+        mRecyclerView.setHasFixedSize(false); // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false)); //it can be GridLayoutManager or StaggeredGridLayoutManager
         mRecyclerView.setNestedScrollingEnabled(false);
@@ -88,15 +74,31 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerAdapter = new RecyclerAdapter(this); //set the mRecyclerAdapter to the recycler view
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
         mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerAdapter.setOnItemClickListener(this);
     }
 
-    /**Function to put dummy data into the recyclerView*/
-    private void dummyData(){
+
+    /**
+     * Handles the recycler view item clicks
+     */
+    @Override
+    public void onItemClick(int position) {
+        // Here we start our detailed activity and pass the values of the clicked item into it
+        Intent detailedActivityIntent = new Intent(getApplicationContext(), DetailedActivity.class);
+        detailedActivityIntent.putExtra(ITEM,
+                mListItems.get(position)); // Get the position of the clicked item
+        startActivity(detailedActivityIntent);
+    }
+
+    /**
+     * Function to put dummy data into the recyclerView
+     */
+    private void dummyData() {
         //dummy data
-        for (int i = 0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             ModelClass listItem;
-            if (i%2 == 0) {
-                 listItem = new ModelClass(
+            if (i % 2 == 0) {
+                listItem = new ModelClass(
                         "Heading " + i, "Dummy description", 0
                 );
             } else {
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             typeValue = 1;
         }
-        ModelClass modelClass = new ModelClass("Heading"+Integer.toString(position)," New Item",typeValue);
+        ModelClass modelClass = new ModelClass("Heading" + position, " New Item",typeValue);
         mRecyclerAdapter.addItem(modelClass, position);
     }
 
@@ -156,6 +158,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attachToRecyclerView(mRecyclerView); // Attach it to the recycler view
     }
-
-
 }
