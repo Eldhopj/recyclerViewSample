@@ -35,14 +35,12 @@ class OddViewHolder(
     }
 
     override fun onClick(v: View) {
-        if (mListener != null) {
             val position = adapterPosition // Get the index of the view holder
             if (position != RecyclerView.NO_POSITION) { // Makes sure this position is still valid
                 if (v === itemView) {
-                    mListener!!.onItemClick(position) // we catch the click on the item view then pass it over the interface and then to our activity
+                    mListener?.onItemClick(position) // we catch the click on the item view then pass it over the interface and then to our activity
                 }
             }
-        }
     }
 
 }
