@@ -18,7 +18,7 @@ import java.util.*
 
 /**1.Add dependencies
  * 2. Add recycler view  in the layout where it needed
- * 3.Create an layout for the items (list_liem.xml)
+ * 3.Create an layout for the items (list_item.xml)
  * 4.Model Class
  * 5.Bind the data with recycler view using an mRecyclerAdapter
  * 6. By using setOnItemClickListener handle the mRecyclerView Item click then pass the value to the DetailedActivity
