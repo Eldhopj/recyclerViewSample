@@ -87,7 +87,7 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
     }
 
     fun addItemRange(items: List<ModelClass>?) {
-        if (items != null) {
+        if (!items.isNullOrEmpty()) {
             val position = mListItems.size
             mListItems.addAll(position, items)
             notifyItemRangeInserted(position, items.size)
@@ -95,7 +95,7 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
     }
 
     fun addItemRangeInPosition(items: List<ModelClass>?, position: Int) {
-        if (items != null) {
+        if (!items.isNullOrEmpty()) {
             if (mListItems.size >= position) {
                 mListItems.addAll(position, items)
                 notifyItemRangeInserted(position, items.size)
