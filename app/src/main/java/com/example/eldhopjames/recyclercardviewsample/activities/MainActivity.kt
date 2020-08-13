@@ -29,14 +29,13 @@ import java.util.*
  */
 class MainActivity : AppCompatActivity(),
     OnItemClickListener {
-    //Define the variables
-    private var mListItems: MutableList<ModelClass>? = null
-    private var mRecyclerAdapter: RecyclerAdapter? = null
+    private var mListItems: MutableList<ModelClass> = ArrayList()
+
+    /**Inside this list item we get all our values */
+    private lateinit var mRecyclerAdapter: RecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        /**Inside this list item we get all our values */
-        mListItems = ArrayList()
         initRecyclerView()
         dummyData()
         gesture()
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity(),
         mRecyclerAdapter = RecyclerAdapter(this) //set the mRecyclerAdapter to the recycler view
         //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
         recyclerView.adapter = mRecyclerAdapter
-        mRecyclerAdapter!!.setOnItemClickListener(this)
+        mRecyclerAdapter.setOnItemClickListener(this)
     }
 
     /**
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity(),
             Intent(applicationContext, DetailedActivity::class.java)
         detailedActivityIntent.putExtra(
             ITEM,
-            mListItems!![position]
+            mListItems[position]
         ) // Get the position of the clicked item
         startActivity(detailedActivityIntent)
     }
@@ -86,11 +85,11 @@ class MainActivity : AppCompatActivity(),
                     "Heading $i", "Dummy description", 1
                 )
             }
-            mListItems!!.add(listItem)
+            mListItems.add(listItem)
             /** adding dummy data into the List */
         }
         //dummy data ends here
-        mRecyclerAdapter!!.addItemRange(mListItems)
+        mRecyclerAdapter.addItemRange(mListItems)
     }
     /**
      * For Pagination check : https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b
@@ -110,7 +109,7 @@ class MainActivity : AppCompatActivity(),
             1
         }
         val modelClass = ModelClass("Heading$position", " New Item", typeValue)
-        mRecyclerAdapter!!.addItem(modelClass, position)
+        mRecyclerAdapter.addItem(modelClass, position)
     }
 
     /**Removing an item from a position of RecyclerView */
@@ -119,7 +118,7 @@ class MainActivity : AppCompatActivity(),
         val position = editText!!.text.toString().toInt()
         /** @params -> position to where we need to add the item
          */
-        mRecyclerAdapter!!.removeItem(position)
+        mRecyclerAdapter.removeItem(position)
     }
 
     /**
@@ -136,7 +135,7 @@ class MainActivity : AppCompatActivity(),
             }
 
             override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
-                mRecyclerAdapter!!.removeItem(viewHolder.adapterPosition) // Passing the position into the remove function
+                mRecyclerAdapter.removeItem(viewHolder.adapterPosition) // Passing the position into the remove function
             }
         }).attachToRecyclerView(recyclerView) // Attach it to the recycler view
     }
