@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.eldhopjames.recyclercardviewsample.R
 import com.example.eldhopjames.recyclercardviewsample.adapter.RecyclerAdapter
-import com.example.eldhopjames.recyclercardviewsample.interfaces.OnItemClickListener
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -27,8 +26,7 @@ import java.util.*
  * 1.Implement Parcelable in ModelClass and import all methods
  * 2.Send parcel position into DetailedActivity from MainActivity
  */
-class MainActivity : AppCompatActivity(),
-    OnItemClickListener {
+class MainActivity : AppCompatActivity() {
     private var mListItems: MutableList<ModelClass> = ArrayList()
 
     /**Inside this list item we get all our values */
@@ -53,13 +51,16 @@ class MainActivity : AppCompatActivity(),
         mRecyclerAdapter = RecyclerAdapter(this) //set the mRecyclerAdapter to the recycler view
         //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
         recyclerView.adapter = mRecyclerAdapter
-        mRecyclerAdapter.setOnItemClickListener(this)
+        mRecyclerAdapter.setOnContentClickListener { modelClass, i ->
+            Log.d(TAG, modelClass.toString())
+            onItemClick(i)
+        }
     }
 
     /**
      * Handles the recycler view item clicks
      */
-    override fun onItemClick(position: Int) {
+    private fun onItemClick(position: Int) {
         // Here we start our detailed activity and pass the values of the clicked item into it
         val detailedActivityIntent =
             Intent(applicationContext, DetailedActivity::class.java)

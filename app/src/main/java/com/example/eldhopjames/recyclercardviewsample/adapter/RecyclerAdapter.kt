@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.eldhopjames.recyclercardviewsample.R
-import com.example.eldhopjames.recyclercardviewsample.interfaces.OnItemClickListener
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.EmptyViewHolder
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.EvenViewHolder
@@ -23,12 +22,13 @@ import java.util.*
  */
 class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<ViewHolder>() {
     private val mListItems: MutableList<ModelClass> = ArrayList()
-    private var mListener: OnItemClickListener? = null
+    private var mListener: ((ModelClass, Int) -> Unit)? = null
 
     /**
-     * interface will forward our click from adapter to our main activity
+     * lambda will forward our click from adapter to our activity/fragment
+     * NOTE : we can pass lambda via constructor of the adapter also
      */
-    fun setOnItemClickListener(listener: OnItemClickListener?) {
+    fun setOnContentClickListener(listener: (ModelClass, Int) -> Unit) {
         mListener = listener
     }
 
