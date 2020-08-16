@@ -51,22 +51,22 @@ class MainActivity : AppCompatActivity() {
         mRecyclerAdapter = RecyclerAdapter(this) //set the mRecyclerAdapter to the recycler view
         //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
         recyclerView.adapter = mRecyclerAdapter
-        mRecyclerAdapter.setOnContentClickListener { modelClass, i ->
-            Log.d(TAG, modelClass.toString())
-            onItemClick(i)
+        mRecyclerAdapter.setOnContentClickListener { modelClass, index ->
+            Log.d(TAG, index.toString())
+            onItemClick(modelClass)
         }
     }
 
     /**
      * Handles the recycler view item clicks
      */
-    private fun onItemClick(position: Int) {
+    private fun onItemClick(modelClass: ModelClass) {
         // Here we start our detailed activity and pass the values of the clicked item into it
         val detailedActivityIntent =
             Intent(applicationContext, DetailedActivity::class.java)
         detailedActivityIntent.putExtra(
             ITEM,
-            mListItems[position]
+            modelClass
         ) // Get the position of the clicked item
         startActivity(detailedActivityIntent)
     }
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
             /** adding dummy data into the List */
         }
         //dummy data ends here
-        mRecyclerAdapter.submitList(mListItems)
+        mRecyclerAdapter.submitListItem(mListItems)
     }
     /**
      * For Pagination check : https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b

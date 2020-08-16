@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.eldhopjames.recyclercardviewsample.R
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
@@ -20,8 +20,8 @@ import com.example.eldhopjames.recyclercardviewsample.viewHolders.OddViewHolder
  * We create an interface to pass the values of the item clicked into activity
  *
  */
-class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<ViewHolder>() {
-    private var mListItems: MutableList<ModelClass> = ArrayList()
+class RecyclerAdapter(private val mContext: Context) :
+    ListAdapter<ModelClass, ViewHolder>(DiffCallback()) {
     private var mListener: ((ModelClass, Int) -> Unit)? = null
 
     /**
@@ -30,6 +30,15 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
      */
     fun setOnContentClickListener(listener: (ModelClass, Int) -> Unit) {
         mListener = listener
+    }
+
+    class DiffCallback : DiffUtil.ItemCallback<ModelClass>() {
+        override fun areItemsTheSame(oldItem: ModelClass, newItem: ModelClass): Boolean =
+            oldItem.primaryKey == newItem.primaryKey
+
+        override fun areContentsTheSame(oldItem: ModelClass, newItem: ModelClass): Boolean =
+            oldItem == newItem
+
     }
 
     override fun onCreateViewHolder(
@@ -42,12 +51,12 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
             0 -> {
                 view = inflater
                     .inflate(R.layout.even_list_item, parent, false)
-                OddViewHolder(view, mListener, mListItems)
+                OddViewHolder(view, mListener)
             }
             1 -> {
                 view = inflater
                     .inflate(R.layout.odd_list_item, parent, false)
-                EvenViewHolder(view, mListener, mListItems)
+                EvenViewHolder(view, mListener)
             }
             else -> {
                 view = inflater
@@ -58,9 +67,9 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (mListItems[position].type == 0) {
+        if (getItem(position).type == 0) {
             return 0
-        } else if (mListItems[position].type == 1) {
+        } else if (getItem(position).type == 1) {
             return 1
         }
         return super.getItemViewType(position)
@@ -70,29 +79,26 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
         holder: ViewHolder,
         position: Int
     ) { //populate the data into the list_item (View Holder), as we scroll
-        (holder as? EvenViewHolder)?.bindData()
-        (holder as? OddViewHolder)?.bindData()
+        (holder as? EvenViewHolder)?.bindData(getItem(position))
+        (holder as? OddViewHolder)?.bindData(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return mListItems.size
-    }
 
     //-------------------------------------Manipulating RecyclerView--------------------------------//
 
     /**
      * Submitting a list into a particular position (if position is not valid, we will append at the end) or appending at the end
      * */
-    fun submitList(newDataList: MutableList<ModelClass>?, position: Int = itemCount) {
+    fun submitListItem(newDataList: MutableList<ModelClass>?, position: Int = itemCount) {
         if (!newDataList.isNullOrEmpty()) {
             val newItems = ArrayList<ModelClass>()
-            newItems.addAll(mListItems)
+            newItems.addAll(currentList)
             if (itemCount >= position) {
                 newItems.addAll(position, newDataList)
             } else {
                 newItems.addAll(newDataList)
             }
-            updateListItems(newItems)
+            submitList(newItems)
         }
     }
 
@@ -100,9 +106,9 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
      * clearing of data from adapter
      * */
     fun clearData() {
-        if (mListItems.isNotEmpty()) {
+        if (currentList.isNotEmpty()) {
             val newItems = ArrayList<ModelClass>()
-            updateListItems(newItems)
+            submitList(newItems)
         }
     }
 
@@ -112,13 +118,13 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
     fun addOrReplaceItem(newData: ModelClass?, position: Int = itemCount) {
         if (newData != null) {
             val newItems = ArrayList<ModelClass>()
-            newItems.addAll(mListItems)
+            newItems.addAll(currentList)
             if (itemCount >= position) {
                 newItems.add(position, newData)
             } else {
                 newItems.add(newData)
             }
-            updateListItems(newItems)
+            submitList(newItems)
         }
     }
 
@@ -127,47 +133,13 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
      * */
     fun removeItem(position: Int = itemCount - 1) {
         val newItems = ArrayList<ModelClass>()
-        newItems.addAll(mListItems)
+        newItems.addAll(currentList)
         if (itemCount > position) {
             newItems.removeAt(position)
         } else {
-            newItems.removeAt(mListItems.size - 1)
+            newItems.removeAt(currentList.size - 1)
         }
-        updateListItems(newItems)
-    }
-
-    private fun updateListItems(newItems: MutableList<ModelClass>) {
-        val diffResult = DiffUtil.calculateDiff(
-            RecyclerDiffUtilCallback(
-                newItems
-            )
-        )
-        mListItems.clear()
-        mListItems.addAll(newItems)
-        diffResult.dispatchUpdatesTo(this)
-    }
-
-    private inner class RecyclerDiffUtilCallback(var newItems: List<ModelClass>) :
-        DiffUtil.Callback() {
-
-        override fun getOldListSize(): Int {
-            return itemCount
-        }
-
-        override fun getNewListSize(): Int {
-            return newItems.size
-        }
-
-        //Checks both items are same by checking its primary key
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return (newItems[newItemPosition].primaryKey == mListItems[oldItemPosition].primaryKey)
-        }
-
-        //Check both contents are same
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return newItems[newItemPosition] == mListItems[oldItemPosition]
-        }
-
+        submitList(newItems)
     }
 
 }
