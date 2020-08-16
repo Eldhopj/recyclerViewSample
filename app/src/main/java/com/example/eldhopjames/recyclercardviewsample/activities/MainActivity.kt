@@ -27,7 +27,6 @@ import java.util.*
  * 2.Send parcel position into DetailedActivity from MainActivity
  */
 class MainActivity : AppCompatActivity() {
-    private var mListItems: MutableList<ModelClass> = ArrayList()
 
     /**Inside this list item we get all our values */
     private lateinit var mRecyclerAdapter: RecyclerAdapter
@@ -74,8 +73,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * Function to put dummy data into the recyclerView
      */
-    private fun dummyData() {
-        //dummy data
+    private fun dummyData() { //dummy data
+        val mListItems: MutableList<ModelClass> = ArrayList()
         for (i in 0..9) {
             val listItem: ModelClass = if (i % 2 == 0) {
                 ModelClass(
