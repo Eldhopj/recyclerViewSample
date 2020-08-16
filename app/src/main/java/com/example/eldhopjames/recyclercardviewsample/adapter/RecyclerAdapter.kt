@@ -80,34 +80,51 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
 
     //-------------------------------------Manipulating RecyclerView--------------------------------//
 
-    fun submitList(newItems: MutableList<ModelClass>?) {
-        if (!newItems.isNullOrEmpty()) {
-            newItems.addAll(0, mListItems)
-            updateListItems(newItems)
-        }
-    }
-
-    fun clearData() {
-        if (mListItems.isNotEmpty()) {
-            val newItems = ArrayList<ModelClass>()
-            updateListItems(newItems)
-
-        }
-    }
-
-    fun addOrReplaceItem(newItem: ModelClass?, position: Int = itemCount) {
-        if (newItem != null) {
+    /**
+     * Submitting a list into a particular position (if position is not valid, we will append at the end) or appending at the end
+     * */
+    fun submitList(newDataList: MutableList<ModelClass>?, position: Int = itemCount) {
+        if (!newDataList.isNullOrEmpty()) {
             val newItems = ArrayList<ModelClass>()
             newItems.addAll(mListItems)
             if (itemCount >= position) {
-                newItems.add(position, newItem)
+                newItems.addAll(position, newDataList)
             } else {
-                newItems.add(newItem)
+                newItems.addAll(newDataList)
             }
             updateListItems(newItems)
         }
     }
 
+    /**
+     * clearing of data from adapter
+     * */
+    fun clearData() {
+        if (mListItems.isNotEmpty()) {
+            val newItems = ArrayList<ModelClass>()
+            updateListItems(newItems)
+        }
+    }
+
+    /**
+     * Submitting a object into a particular position (if position is not valid, we will append at the end)or appending at the end
+     * */
+    fun addOrReplaceItem(newData: ModelClass?, position: Int = itemCount) {
+        if (newData != null) {
+            val newItems = ArrayList<ModelClass>()
+            newItems.addAll(mListItems)
+            if (itemCount >= position) {
+                newItems.add(position, newData)
+            } else {
+                newItems.add(newData)
+            }
+            updateListItems(newItems)
+        }
+    }
+
+    /**
+     * clearing of an object from a particular position (if position is not valid, we will remove from the end) or from last adapter
+     * */
     fun removeItem(position: Int = itemCount - 1) {
         val newItems = ArrayList<ModelClass>()
         newItems.addAll(mListItems)
@@ -146,62 +163,11 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
             return (newItems[newItemPosition].primaryKey == mListItems[oldItemPosition].primaryKey)
         }
 
+        //Check both contents are same
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return newItems[newItemPosition] == mListItems[oldItemPosition]
         }
 
     }
-
-
-//    fun clearData() {
-//        if (mListItems.isNotEmpty()) {
-//            mListItems.clear()
-//            notifyDataSetChanged()
-//        }
-//    }
-//
-//    fun addItemRange(items: List<ModelClass>?) {
-//        if (!items.isNullOrEmpty()) {
-//            val position = mListItems.size
-//            mListItems.addAll(position, items)
-//            notifyItemRangeInserted(position, items.size)
-//        }
-//    }
-//
-//    fun addItemRangeInPosition(items: List<ModelClass>?, position: Int) {
-//        if (!items.isNullOrEmpty()) {
-//            if (mListItems.size >= position) {
-//                mListItems.addAll(position, items)
-//                notifyItemRangeInserted(position, items.size)
-//            } else {
-//                mListItems.addAll(items)
-//                notifyItemRangeInserted(mListItems.size - 1, items.size)
-//            }
-//        }
-//    }
-
-//    fun addItem(item: ModelClass?, position: Int) {
-//        if (item != null) {
-//            if (mListItems.size >= position) {
-//                mListItems.add(position, item)
-//                notifyItemInserted(position)
-//            } else {
-//                mListItems.add(item)
-//                notifyItemInserted(mListItems.size - 1)
-//            }
-//        }
-//    }
-
-//
-//    fun removeItem(position: Int) {
-//        if (mListItems.size > position) {
-//            mListItems.removeAt(position)
-//            notifyItemRemoved(position)
-//        } else {
-//            val newPosition = mListItems.size - 1
-//            mListItems.removeAt(newPosition)
-//            notifyItemRemoved(newPosition)
-//        }
-//    }
 
 }
