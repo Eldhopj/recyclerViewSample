@@ -8,5 +8,6 @@ import kotlinx.android.parcel.Parcelize
 data class ModelClass(
     val head: String? = null,
     val desc: String? = null,
-    val type: Int = 0
+    val type: Int = 0,
+    val primaryKey: Int = 0
 ) : Parcelable

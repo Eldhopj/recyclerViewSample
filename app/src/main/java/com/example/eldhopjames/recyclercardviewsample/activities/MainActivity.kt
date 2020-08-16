@@ -79,18 +79,18 @@ class MainActivity : AppCompatActivity() {
         for (i in 0..9) {
             val listItem: ModelClass = if (i % 2 == 0) {
                 ModelClass(
-                    "Heading $i", "Dummy description", 0
+                    "Heading $i", "Dummy description", 0, i
                 )
             } else {
                 ModelClass(
-                    "Heading $i", "Dummy description", 1
+                    "Heading $i", "Dummy description", 1, i
                 )
             }
             mListItems.add(listItem)
             /** adding dummy data into the List */
         }
         //dummy data ends here
-        mRecyclerAdapter.addItemRange(mListItems)
+        mRecyclerAdapter.submitList(mListItems)
     }
     /**
      * For Pagination check : https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
     /**Adding item into a position of RecyclerView */
     fun add(view: View?) {
         Log.d(TAG, "add: ")
-        val position = editText!!.text.toString().toInt()
+        val position = editText.text.toString().toInt()
 
         /**@params -> position to where we need to add the item, NOTE : It is optional
          * @params -> passing the values into the model class
@@ -109,14 +109,14 @@ class MainActivity : AppCompatActivity() {
         } else {
             1
         }
-        val modelClass = ModelClass("Heading$position", " New Item", typeValue)
-        mRecyclerAdapter.addItem(modelClass, position)
+        val modelClass = ModelClass("Heading$position", " New Item", typeValue, position)
+        mRecyclerAdapter.addOrReplaceItem(modelClass, position)
     }
 
     /**Removing an item from a position of RecyclerView */
     fun remove(view: View?) {
         Log.d(TAG, "remove: ")
-        val position = editText!!.text.toString().toInt()
+        val position = editText.text.toString().toInt()
         /** @params -> position to where we need to add the item
          */
         mRecyclerAdapter.removeItem(position)

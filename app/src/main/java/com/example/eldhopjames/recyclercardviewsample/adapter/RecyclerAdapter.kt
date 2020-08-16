@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.eldhopjames.recyclercardviewsample.R
@@ -11,7 +12,6 @@ import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.EmptyViewHolder
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.EvenViewHolder
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.OddViewHolder
-import java.util.*
 
 /**
  * needs RecyclerAdapter and View Holder
@@ -21,7 +21,7 @@ import java.util.*
  *
  */
 class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<ViewHolder>() {
-    private val mListItems: MutableList<ModelClass> = ArrayList()
+    private var mListItems: MutableList<ModelClass> = ArrayList()
     private var mListener: ((ModelClass, Int) -> Unit)? = null
 
     /**
@@ -79,54 +79,129 @@ class RecyclerAdapter(private val mContext: Context) : RecyclerView.Adapter<View
     }
 
     //-------------------------------------Manipulating RecyclerView--------------------------------//
+
+    fun submitList(newItems: MutableList<ModelClass>?) {
+        if (!newItems.isNullOrEmpty()) {
+            newItems.addAll(0, mListItems)
+            updateListItems(newItems)
+        }
+    }
+
     fun clearData() {
         if (mListItems.isNotEmpty()) {
-            mListItems.clear()
-            notifyDataSetChanged()
+            val newItems = ArrayList<ModelClass>()
+            updateListItems(newItems)
+
         }
     }
 
-    fun addItemRange(items: List<ModelClass>?) {
-        if (!items.isNullOrEmpty()) {
-            val position = mListItems.size
-            mListItems.addAll(position, items)
-            notifyItemRangeInserted(position, items.size)
-        }
-    }
-
-    fun addItemRangeInPosition(items: List<ModelClass>?, position: Int) {
-        if (!items.isNullOrEmpty()) {
-            if (mListItems.size >= position) {
-                mListItems.addAll(position, items)
-                notifyItemRangeInserted(position, items.size)
+    fun addOrReplaceItem(newItem: ModelClass?, position: Int = itemCount) {
+        if (newItem != null) {
+            val newItems = ArrayList<ModelClass>()
+            newItems.addAll(mListItems)
+            if (itemCount >= position) {
+                newItems.add(position, newItem)
             } else {
-                mListItems.addAll(items)
-                notifyItemRangeInserted(mListItems.size - 1, items.size)
+                newItems.add(newItem)
             }
+            updateListItems(newItems)
         }
     }
 
-    fun addItem(item: ModelClass?, position: Int) {
-        if (item != null) {
-            if (mListItems.size >= position) {
-                mListItems.add(position, item)
-                notifyItemInserted(position)
-            } else {
-                mListItems.add(item)
-                notifyItemInserted(mListItems.size - 1)
-            }
-        }
-    }
-
-    fun removeItem(position: Int) {
-        if (mListItems.size > position) {
-            mListItems.removeAt(position)
-            notifyItemRemoved(position)
+    fun removeItem(position: Int = itemCount - 1) {
+        val newItems = ArrayList<ModelClass>()
+        newItems.addAll(mListItems)
+        if (itemCount > position) {
+            newItems.removeAt(position)
         } else {
-            val newPosition = mListItems.size - 1
-            mListItems.removeAt(newPosition)
-            notifyItemRemoved(newPosition)
+            newItems.removeAt(mListItems.size - 1)
         }
+        updateListItems(newItems)
     }
+
+    private fun updateListItems(newItems: MutableList<ModelClass>) {
+        val diffResult = DiffUtil.calculateDiff(
+            RecyclerDiffUtilCallback(
+                newItems
+            )
+        )
+        mListItems.clear()
+        mListItems.addAll(newItems)
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    private inner class RecyclerDiffUtilCallback(var newItems: List<ModelClass>) :
+        DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int {
+            return itemCount
+        }
+
+        override fun getNewListSize(): Int {
+            return newItems.size
+        }
+
+        //Checks both items are same by checking its primary key
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return (newItems[newItemPosition].primaryKey == mListItems[oldItemPosition].primaryKey)
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return newItems[newItemPosition] == mListItems[oldItemPosition]
+        }
+
+    }
+
+
+//    fun clearData() {
+//        if (mListItems.isNotEmpty()) {
+//            mListItems.clear()
+//            notifyDataSetChanged()
+//        }
+//    }
+//
+//    fun addItemRange(items: List<ModelClass>?) {
+//        if (!items.isNullOrEmpty()) {
+//            val position = mListItems.size
+//            mListItems.addAll(position, items)
+//            notifyItemRangeInserted(position, items.size)
+//        }
+//    }
+//
+//    fun addItemRangeInPosition(items: List<ModelClass>?, position: Int) {
+//        if (!items.isNullOrEmpty()) {
+//            if (mListItems.size >= position) {
+//                mListItems.addAll(position, items)
+//                notifyItemRangeInserted(position, items.size)
+//            } else {
+//                mListItems.addAll(items)
+//                notifyItemRangeInserted(mListItems.size - 1, items.size)
+//            }
+//        }
+//    }
+
+//    fun addItem(item: ModelClass?, position: Int) {
+//        if (item != null) {
+//            if (mListItems.size >= position) {
+//                mListItems.add(position, item)
+//                notifyItemInserted(position)
+//            } else {
+//                mListItems.add(item)
+//                notifyItemInserted(mListItems.size - 1)
+//            }
+//        }
+//    }
+
+//
+//    fun removeItem(position: Int) {
+//        if (mListItems.size > position) {
+//            mListItems.removeAt(position)
+//            notifyItemRemoved(position)
+//        } else {
+//            val newPosition = mListItems.size - 1
+//            mListItems.removeAt(newPosition)
+//            notifyItemRemoved(newPosition)
+//        }
+//    }
 
 }
