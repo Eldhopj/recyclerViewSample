@@ -1,7 +1,6 @@
 package com.example.eldhopjames.recyclercardviewsample.viewHolders
 
 import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
@@ -13,8 +12,8 @@ class OddViewHolder(
 ) :
     ViewHolder(itemView), View.OnClickListener {
 
-    private val heading: TextView = itemView.heading
-    private val description: TextView = itemView.description
+    private val heading = itemView.heading
+    private val description = itemView.description
     private var item: ModelClass? = null
 
     init {
