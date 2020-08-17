@@ -119,7 +119,7 @@ class RecyclerAdapter(private val mContext: Context) :
         if (newData != null) {
             val newItems = ArrayList<ModelClass>()
             newItems.addAll(currentList)
-            if (itemCount >= position) {
+            if (itemCount > position) {
                 newItems.add(position, newData)
             } else {
                 newItems.add(newData)
@@ -137,7 +137,7 @@ class RecyclerAdapter(private val mContext: Context) :
         if (itemCount > position) {
             newItems.removeAt(position)
         } else {
-            newItems.removeAt(currentList.size - 1)
+            newItems.removeAt(itemCount - 1)
         }
         submitList(newItems)
     }
