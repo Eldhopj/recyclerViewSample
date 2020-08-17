@@ -50,13 +50,13 @@ class RecyclerAdapter(private val mContext: Context) :
         return when (viewType) {
             0 -> {
                 view = inflater
-                    .inflate(R.layout.even_list_item, parent, false)
-                OddViewHolder(view, mListener)
+                    .inflate(R.layout.odd_list_item, parent, false)
+                EvenViewHolder(view, mListener)
             }
             1 -> {
                 view = inflater
-                    .inflate(R.layout.odd_list_item, parent, false)
-                EvenViewHolder(view, mListener)
+                    .inflate(R.layout.even_list_item, parent, false)
+                OddViewHolder(view, mListener)
             }
             else -> {
                 view = inflater
