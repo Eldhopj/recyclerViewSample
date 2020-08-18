@@ -2,12 +2,13 @@ package com.example.eldhopjames.recyclercardviewsample.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.example.eldhopjames.recyclercardviewsample.R
+import com.example.eldhopjames.recyclercardviewsample.databinding.EvenListItemBinding
+import com.example.eldhopjames.recyclercardviewsample.databinding.ItemEmptyBinding
+import com.example.eldhopjames.recyclercardviewsample.databinding.OddListItemBinding
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.EmptyViewHolder
 import com.example.eldhopjames.recyclercardviewsample.viewHolders.EvenViewHolder
@@ -46,22 +47,28 @@ class RecyclerAdapter(private val mContext: Context) :
         viewType: Int
     ): ViewHolder { // this method calls when ever our view method is created , ie; the instance of ViewHolder class is created
         val inflater = LayoutInflater.from(parent.context)
-        val view: View
+        val binding: Any
         return when (viewType) {
             0 -> {
-                view = inflater
-                    .inflate(R.layout.odd_list_item, parent, false)
-                EvenViewHolder(view, mListener)
+                binding = EvenListItemBinding.inflate(
+                    LayoutInflater.from(mContext),
+                    parent, false
+                )
+                EvenViewHolder(binding, mListener)
             }
             1 -> {
-                view = inflater
-                    .inflate(R.layout.even_list_item, parent, false)
-                OddViewHolder(view, mListener)
+                binding = OddListItemBinding.inflate(
+                    LayoutInflater.from(mContext),
+                    parent, false
+                )
+                OddViewHolder(binding, mListener)
             }
             else -> {
-                view = inflater
-                    .inflate(R.layout.item_empty, parent, false)
-                EmptyViewHolder(view)
+                binding = ItemEmptyBinding.inflate(
+                    LayoutInflater.from(mContext),
+                    parent, false
+                )
+                EmptyViewHolder(binding)
             }
         }
     }

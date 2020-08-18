@@ -3,21 +3,21 @@ package com.example.eldhopjames.recyclercardviewsample.viewHolders
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.eldhopjames.recyclercardviewsample.databinding.OddListItemBinding
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
-import kotlinx.android.synthetic.main.odd_list_item.view.*
 
 class OddViewHolder(
-    itemView: View, // with the help of "itemView" we ge the views from xml
+    binding: OddListItemBinding, // with the help of "itemView" we ge the views from xml
     private var mListener: ((ModelClass, Int) -> Unit)?
 ) :
-    ViewHolder(itemView), View.OnClickListener {
+    ViewHolder(binding.root), View.OnClickListener {
 
-    private val heading = itemView.heading
-    private val description = itemView.description
+    private val heading = binding.heading
+    private val description = binding.description
     private var item: ModelClass? = null
 
     init {
-        itemView.setOnClickListener(this)
+        binding.root.setOnClickListener(this)
     }
 
     //Binding of data happens in here

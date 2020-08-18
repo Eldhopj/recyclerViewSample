@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.example.eldhopjames.recyclercardviewsample.R
 import com.example.eldhopjames.recyclercardviewsample.adapter.RecyclerAdapter
+import com.example.eldhopjames.recyclercardviewsample.databinding.ActivityMainBinding
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -26,13 +26,18 @@ import java.util.*
  * 1.Implement Parcelable in ModelClass and import all methods
  * 2.Send parcel position into DetailedActivity from MainActivity
  */
+
+private const val TAG = "MainActivity"
+
 class MainActivity : AppCompatActivity() {
 
-    /**Inside this list item we get all our values */
+    private lateinit var binding: ActivityMainBinding
     private lateinit var mRecyclerAdapter: RecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initRecyclerView()
         dummyData()
         gesture()
@@ -40,19 +45,22 @@ class MainActivity : AppCompatActivity() {
 
     /**Initializing recyclerView */
     private fun initRecyclerView() {
-        recyclerView.setHasFixedSize(false) // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
-        recyclerView.layoutManager = LinearLayoutManager(
-            this,
-            RecyclerView.VERTICAL,
-            false
-        ) //it can be GridLayoutManager or StaggeredGridLayoutManager
-        recyclerView.isNestedScrollingEnabled = false
-        mRecyclerAdapter = RecyclerAdapter(this) //set the mRecyclerAdapter to the recycler view
-        //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
-        recyclerView.adapter = mRecyclerAdapter
-        mRecyclerAdapter.setOnContentClickListener { modelClass, index ->
-            Log.d(TAG, index.toString())
-            onItemClick(modelClass)
+        with(binding) {
+            recyclerView.setHasFixedSize(false) // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
+            recyclerView.layoutManager = LinearLayoutManager(
+                this@MainActivity,
+                RecyclerView.VERTICAL,
+                false
+            ) //it can be GridLayoutManager or StaggeredGridLayoutManager
+            recyclerView.isNestedScrollingEnabled = false
+            mRecyclerAdapter =
+                RecyclerAdapter(this@MainActivity) //set the mRecyclerAdapter to the recycler view
+            //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
+            recyclerView.adapter = mRecyclerAdapter
+            mRecyclerAdapter.setOnContentClickListener { modelClass, index ->
+                Log.d(TAG, index.toString())
+                onItemClick(modelClass)
+            }
         }
     }
 
@@ -97,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     /**Adding item into a position of RecyclerView */
     fun add(view: View?) {
         Log.d(TAG, "add: ")
-        val position = editText.text.toString().toInt()
+        val position = binding.editText.text.toString().toInt()
 
         /**@params -> position to where we need to add the item, NOTE : It is optional
          * @params -> passing the values into the model class
@@ -115,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     /**Removing an item from a position of RecyclerView */
     fun remove(view: View?) {
         Log.d(TAG, "remove: ")
-        val position = editText.text.toString().toInt()
+        val position = binding.editText.text.toString().toInt()
         /** @params -> position to where we need to add the item
          */
         mRecyclerAdapter.removeItem(position)

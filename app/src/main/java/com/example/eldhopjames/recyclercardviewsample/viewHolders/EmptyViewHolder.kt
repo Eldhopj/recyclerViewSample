@@ -1,6 +1,6 @@
 package com.example.eldhopjames.recyclercardviewsample.viewHolders
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.eldhopjames.recyclercardviewsample.databinding.ItemEmptyBinding
 
-class EmptyViewHolder(view: View?) : ViewHolder(view!!)
+class EmptyViewHolder(binding: ItemEmptyBinding) : ViewHolder(binding.root)
