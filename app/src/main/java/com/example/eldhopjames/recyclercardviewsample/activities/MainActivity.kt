@@ -45,22 +45,23 @@ class MainActivity : AppCompatActivity() {
 
     /**Initializing recyclerView */
     private fun initRecyclerView() {
-        with(binding) {
-            recyclerView.setHasFixedSize(false) // setting it to true allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
-            recyclerView.layoutManager = LinearLayoutManager(
+        with(binding.recyclerView) {
+            setHasFixedSize(true) // setting it to true if all the items are have a fixed height and width, this allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
+            layoutManager = LinearLayoutManager(
                 this@MainActivity,
                 RecyclerView.VERTICAL,
                 false
             ) //it can be GridLayoutManager or StaggeredGridLayoutManager
-            recyclerView.isNestedScrollingEnabled = false
-            mRecyclerAdapter =
-                RecyclerAdapter(this@MainActivity) //set the mRecyclerAdapter to the recycler view
-            //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
-            recyclerView.adapter = mRecyclerAdapter
-            mRecyclerAdapter.setOnContentClickListener { modelClass, index ->
-                Log.d(TAG, index.toString())
-                onItemClick(modelClass)
-            }
+            isNestedScrollingEnabled = false
+            //        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
+            adapter = mRecyclerAdapter
+        }
+        mRecyclerAdapter =
+            RecyclerAdapter(this@MainActivity) //set the mRecyclerAdapter to the recycler view
+
+        mRecyclerAdapter.setOnContentClickListener { modelClass, index ->
+            Log.d(TAG, index.toString())
+            onItemClick(modelClass)
         }
     }
 

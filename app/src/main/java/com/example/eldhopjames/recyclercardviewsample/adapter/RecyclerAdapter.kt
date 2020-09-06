@@ -46,26 +46,26 @@ class RecyclerAdapter(private val mContext: Context) :
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder { // this method calls when ever our view method is created , ie; the instance of ViewHolder class is created
-        val inflater = LayoutInflater.from(parent.context)
+        val inflater = LayoutInflater.from(mContext)
         val binding: Any
         return when (viewType) {
             0 -> {
                 binding = EvenListItemBinding.inflate(
-                    LayoutInflater.from(mContext),
+                    inflater,
                     parent, false
                 )
                 EvenViewHolder(binding, mListener)
             }
             1 -> {
                 binding = OddListItemBinding.inflate(
-                    LayoutInflater.from(mContext),
+                    inflater,
                     parent, false
                 )
                 OddViewHolder(binding, mListener)
             }
             else -> {
                 binding = ItemEmptyBinding.inflate(
-                    LayoutInflater.from(mContext),
+                    inflater,
                     parent, false
                 )
                 EmptyViewHolder(binding)

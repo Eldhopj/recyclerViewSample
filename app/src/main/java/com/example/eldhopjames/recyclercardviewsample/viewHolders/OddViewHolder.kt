@@ -17,7 +17,7 @@ class OddViewHolder(
     private var item: ModelClass? = null
 
     init {
-        binding.root.setOnClickListener(this)
+        itemView.setOnClickListener(this)
     }
 
     //Binding of data happens in here
