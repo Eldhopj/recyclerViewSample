@@ -21,16 +21,16 @@ import com.example.eldhopjames.recyclercardviewsample.viewHolders.OddViewHolder
  * We create an interface to pass the values of the item clicked into activity
  *
  */
-class RecyclerAdapter(private val mContext: Context) :
+class RecyclerAdapter(private val context: Context) :
     ListAdapter<ModelClass, ViewHolder>(DiffCallback()) {
-    private var mListener: ((ModelClass, Int) -> Unit)? = null
+    private var listener: ((ModelClass, Int) -> Unit)? = null
 
     /**
      * lambda will forward our click from adapter to our activity/fragment
      * NOTE : we can pass lambda via constructor of the adapter also
      */
     fun setOnContentClickListener(listener: (ModelClass, Int) -> Unit) {
-        mListener = listener
+        this.listener = listener
     }
 
     class DiffCallback : DiffUtil.ItemCallback<ModelClass>() {
@@ -46,7 +46,7 @@ class RecyclerAdapter(private val mContext: Context) :
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder { // this method calls when ever our view method is created , ie; the instance of ViewHolder class is created
-        val inflater = LayoutInflater.from(mContext)
+        val inflater = LayoutInflater.from(context)
         val binding: Any
         return when (viewType) {
             0 -> {
@@ -54,14 +54,14 @@ class RecyclerAdapter(private val mContext: Context) :
                     inflater,
                     parent, false
                 )
-                EvenViewHolder(binding, mListener)
+                EvenViewHolder(binding, listener)
             }
             1 -> {
                 binding = OddListItemBinding.inflate(
                     inflater,
                     parent, false
                 )
-                OddViewHolder(binding, mListener)
+                OddViewHolder(binding, listener)
             }
             else -> {
                 binding = ItemEmptyBinding.inflate(

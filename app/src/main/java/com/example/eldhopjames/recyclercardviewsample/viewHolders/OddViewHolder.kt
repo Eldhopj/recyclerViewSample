@@ -8,7 +8,7 @@ import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 
 class OddViewHolder(
     binding: OddListItemBinding, // with the help of "itemView" we ge the views from xml
-    private var mListener: ((ModelClass, Int) -> Unit)?
+    private val listener: ((ModelClass, Int) -> Unit)?
 ) :
     ViewHolder(binding.root), View.OnClickListener {
 
@@ -41,7 +41,7 @@ class OddViewHolder(
         /**
          * All the clicks will come in here*/
         if (v === itemView) {
-            mListener?.invoke(
+            listener?.invoke(
                 item!!,
                 position
             ) // we catch the click on the item view then pass it over the interface and then to our activity

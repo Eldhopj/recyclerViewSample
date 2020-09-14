@@ -9,7 +9,7 @@ import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 //View Holder class caches these references that gonna modify in the adapter
 class EvenViewHolder(
     binding: EvenListItemBinding, // with the help of "itemView" we ge the views from xml
-    private var mListener: ((ModelClass, Int) -> Unit)?
+    private val listener: ((ModelClass, Int) -> Unit)?
 ) :
     ViewHolder(binding.root), View.OnClickListener {
 
@@ -42,11 +42,10 @@ class EvenViewHolder(
         /**
          * All the clicks will come in here*/
         if (v === itemView) {
-            mListener?.invoke(
+            listener?.invoke(
                 item!!,
                 position
             ) // we catch the click on the item view then pass it over the interface and then to our activity
         }
     }
-
 }

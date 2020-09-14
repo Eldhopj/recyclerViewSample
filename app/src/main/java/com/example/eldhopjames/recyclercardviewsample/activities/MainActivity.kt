@@ -32,7 +32,7 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mRecyclerAdapter: RecyclerAdapter
+    private lateinit var recyclerAdapter: RecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,21 +45,22 @@ class MainActivity : AppCompatActivity() {
 
     /**Initializing recyclerView */
     private fun initRecyclerView() {
+        recyclerAdapter =
+            RecyclerAdapter(this) //set the mRecyclerAdapter to the recycler view
+
         with(binding.recyclerView) {
             setHasFixedSize(true) // setting it to true if all the items are have a fixed height and width, this allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
             layoutManager = LinearLayoutManager(
-                this@MainActivity,
+                context,
                 RecyclerView.VERTICAL,
                 false
             ) //it can be GridLayoutManager or StaggeredGridLayoutManager
             isNestedScrollingEnabled = false
             //        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
-            adapter = mRecyclerAdapter
+            adapter = recyclerAdapter
         }
-        mRecyclerAdapter =
-            RecyclerAdapter(this@MainActivity) //set the mRecyclerAdapter to the recycler view
 
-        mRecyclerAdapter.setOnContentClickListener { modelClass, index ->
+        recyclerAdapter.setOnContentClickListener { modelClass, index ->
             Log.d(TAG, index.toString())
             onItemClick(modelClass)
         }
@@ -98,7 +99,7 @@ class MainActivity : AppCompatActivity() {
             /** adding dummy data into the List */
         }
         //dummy data ends here
-        mRecyclerAdapter.submitListItem(mListItems)
+        recyclerAdapter.submitListItem(mListItems)
     }
     /**
      * For Pagination check : https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b
@@ -118,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             1
         }
         val modelClass = ModelClass("Heading$position", " New Item", typeValue, position)
-        mRecyclerAdapter.addOrReplaceItem(modelClass, position)
+        recyclerAdapter.addOrReplaceItem(modelClass, position)
     }
 
     /**Removing an item from a position of RecyclerView */
@@ -127,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         val position = binding.editText.text.toString().toInt()
         /** @params -> position to where we need to add the item
          */
-        mRecyclerAdapter.removeItem(position)
+        recyclerAdapter.removeItem(position)
     }
 
     /**
@@ -144,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
-                mRecyclerAdapter.removeItem(viewHolder.adapterPosition) // Passing the position into the remove function
+                recyclerAdapter.removeItem(viewHolder.adapterPosition) // Passing the position into the remove function
             }
         }).attachToRecyclerView(recyclerView) // Attach it to the recycler view
     }
