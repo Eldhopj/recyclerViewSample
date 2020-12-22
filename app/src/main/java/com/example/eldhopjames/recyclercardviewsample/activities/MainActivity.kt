@@ -6,14 +6,13 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.eldhopjames.recyclercardviewsample.adapter.RecyclerAdapter
 import com.example.eldhopjames.recyclercardviewsample.databinding.ActivityMainBinding
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
+import java.util.ArrayList
+import kotlinx.android.synthetic.main.activity_main.recyclerView
 
 /**1.Add dependencies
  * 2. Add recycler view  in the layout where it needed
@@ -39,30 +38,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initRecyclerView()
+        recyclerViewClicks()
         dummyData()
         gesture()
+    }
+
+    private fun recyclerViewClicks() {
+        recyclerAdapter.setOnContentClickListener { modelClass, index ->
+            Log.d(TAG, index.toString())
+            onItemClick(modelClass)
+        }
     }
 
     /**Initializing recyclerView */
     private fun initRecyclerView() {
         recyclerAdapter =
-            RecyclerAdapter(this) //set the mRecyclerAdapter to the recycler view
-
-        with(binding.recyclerView) {
+            RecyclerAdapter()
+        binding.recyclerView.apply {
             setHasFixedSize(true) // setting it to true if all the items are have a fixed height and width, this allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
-            layoutManager = LinearLayoutManager(
-                context,
-                RecyclerView.VERTICAL,
-                false
-            ) //it can be GridLayoutManager or StaggeredGridLayoutManager
             isNestedScrollingEnabled = false
             //        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
             adapter = recyclerAdapter
-        }
-
-        recyclerAdapter.setOnContentClickListener { modelClass, index ->
-            Log.d(TAG, index.toString())
-            onItemClick(modelClass)
         }
     }
 
@@ -119,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             1
         }
         val modelClass = ModelClass("Heading$position", " New Item", typeValue, position)
-        recyclerAdapter.addOrReplaceItem(modelClass, position)
+        recyclerAdapter.addItem(modelClass, position)
     }
 
     /**Removing an item from a position of RecyclerView */

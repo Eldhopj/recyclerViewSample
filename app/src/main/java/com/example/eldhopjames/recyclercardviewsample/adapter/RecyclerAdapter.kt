@@ -1,6 +1,5 @@
 package com.example.eldhopjames.recyclercardviewsample.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -21,7 +20,7 @@ import com.example.eldhopjames.recyclercardviewsample.viewHolders.OddViewHolder
  * We create an interface to pass the values of the item clicked into activity
  *
  */
-class RecyclerAdapter(private val context: Context) :
+class RecyclerAdapter :
     ListAdapter<ModelClass, ViewHolder>(DiffCallback()) {
     private var listener: ((ModelClass, Int) -> Unit)? = null
 
@@ -46,17 +45,17 @@ class RecyclerAdapter(private val context: Context) :
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder { // this method calls when ever our view method is created , ie; the instance of ViewHolder class is created
-        val inflater = LayoutInflater.from(context)
+        val inflater = LayoutInflater.from(parent.context)
         val binding: Any
         return when (viewType) {
-            0 -> {
+            VIEW_TYPE_ODD -> {
                 binding = EvenListItemBinding.inflate(
                     inflater,
                     parent, false
                 )
                 EvenViewHolder(binding, listener)
             }
-            1 -> {
+            VIEW_TYPE_EVEN -> {
                 binding = OddListItemBinding.inflate(
                     inflater,
                     parent, false
@@ -75,9 +74,9 @@ class RecyclerAdapter(private val context: Context) :
 
     override fun getItemViewType(position: Int): Int {
         if (getItem(position).type == 0) {
-            return 0
+            return VIEW_TYPE_ODD
         } else if (getItem(position).type == 1) {
-            return 1
+            return VIEW_TYPE_EVEN
         }
         return super.getItemViewType(position)
     }
@@ -86,20 +85,21 @@ class RecyclerAdapter(private val context: Context) :
         holder: ViewHolder,
         position: Int
     ) { //populate the data into the list_item (View Holder), as we scroll
-        (holder as? EvenViewHolder)?.bindData(getItem(position))
-        (holder as? OddViewHolder)?.bindData(getItem(position))
+        when (holder) {
+            is EvenViewHolder -> holder.bindData(getItem(position))
+            is OddViewHolder -> holder.bindData(getItem(position))
+        }
     }
 
 
     //-------------------------------------Manipulating RecyclerView--------------------------------//
 
     /**
-     * Submitting a list into a particular position (if position is not valid, we will append at the end) or appending at the end
+     * Submitting a arrayList into a particular position (if position is not valid, we will append at the end) by default appending at the end
      * */
     fun submitListItem(newDataList: MutableList<ModelClass>?, position: Int = itemCount) {
         if (!newDataList.isNullOrEmpty()) {
-            val newItems = ArrayList<ModelClass>()
-            newItems.addAll(currentList)
+            val newItems: MutableList<ModelClass> = currentList.toMutableList()
             if (itemCount >= position) {
                 newItems.addAll(position, newDataList)
             } else {
@@ -110,22 +110,20 @@ class RecyclerAdapter(private val context: Context) :
     }
 
     /**
-     * clearing of data from adapter
+     * clearing existing list and submit fresh list
      * */
-    fun clearData() {
-        if (currentList.isNotEmpty()) {
-            val newItems = ArrayList<ModelClass>()
-            submitList(newItems)
+    fun replaceData(newDataList: MutableList<ModelClass>?) {
+        if (!newDataList.isNullOrEmpty()) {
+            submitList(newDataList)
         }
     }
 
     /**
      * Submitting a object into a particular position (if position is not valid, we will append at the end)or appending at the end
      * */
-    fun addOrReplaceItem(newData: ModelClass?, position: Int = itemCount) {
+    fun addItem(newData: ModelClass?, position: Int = itemCount) {
         if (newData != null) {
-            val newItems = ArrayList<ModelClass>()
-            newItems.addAll(currentList)
+            val newItems: MutableList<ModelClass> = currentList.toMutableList()
             if (itemCount > position) {
                 newItems.add(position, newData)
             } else {
@@ -139,8 +137,7 @@ class RecyclerAdapter(private val context: Context) :
      * clearing of an object from a particular position (if position is not valid, we will remove from the end) or from last adapter
      * */
     fun removeItem(position: Int = itemCount - 1) {
-        val newItems = ArrayList<ModelClass>()
-        newItems.addAll(currentList)
+        val newItems: MutableList<ModelClass> = currentList.toMutableList()
         if (itemCount > position) {
             newItems.removeAt(position)
         } else {
@@ -149,4 +146,8 @@ class RecyclerAdapter(private val context: Context) :
         submitList(newItems)
     }
 
+    companion object {
+        private const val VIEW_TYPE_ODD = 1
+        private const val VIEW_TYPE_EVEN = 2
+    }
 }
