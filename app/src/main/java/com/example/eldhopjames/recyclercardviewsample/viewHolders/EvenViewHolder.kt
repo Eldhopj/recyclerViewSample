@@ -36,16 +36,20 @@ class EvenViewHolder(
 
     override fun onClick(v: View) {
         val position = adapterPosition // Get the index of the view holder
-        if (position == RecyclerView.NO_POSITION && item == null) { // Makes sure this position is still valid
+        if (position == RecyclerView.NO_POSITION) { // Makes sure this position is still valid
             return
         }
-        /**
-         * All the clicks will come in here*/
-        if (v === itemView) {
-            listener?.invoke(
-                item!!,
-                position
-            ) // we catch the click on the item view then pass it over the interface and then to our activity
+
+        item?.let {
+            /**
+             * All the clicks will come in here
+             * */
+            if (v === itemView) {
+                listener?.invoke(
+                    it,
+                    position
+                ) // we catch the click on the item view then pass it over the interface and then to our activity
+            }
         }
     }
 }
