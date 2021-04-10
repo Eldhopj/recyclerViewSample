@@ -17,7 +17,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:scrollbars="vertical"
-        style="@style/RecyclerView"
+        style="@style/RecyclerView.Vertical"
         tools:listitem="@layout/odd_list_item"
         app:layout_constraintBottom_toTopOf="@+id/button_add"
         app:layout_constraintEnd_toEndOf="parent"

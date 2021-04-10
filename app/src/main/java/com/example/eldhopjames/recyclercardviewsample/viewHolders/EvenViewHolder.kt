@@ -24,10 +24,6 @@ class EvenViewHolder(
     //Binding of data happens in here
     fun bindData(item: ModelClass) {
         this.item = item
-        val position = adapterPosition
-        if (position == RecyclerView.NO_POSITION) {
-            return
-        }
         with(item) {
             heading.text = head
             description.text = desc

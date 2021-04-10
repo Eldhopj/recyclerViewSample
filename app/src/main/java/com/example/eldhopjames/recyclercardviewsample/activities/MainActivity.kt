@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import com.example.eldhopjames.recyclercardviewsample.R
 import com.example.eldhopjames.recyclercardviewsample.adapter.RecyclerAdapter
 import com.example.eldhopjames.recyclercardviewsample.databinding.ActivityMainBinding
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
+import com.example.eldhopjames.recyclercardviewsample.utils.itemdecorators.VerticalItemDecorator
 import java.util.ArrayList
 import kotlinx.android.synthetic.main.activity_main.recyclerView
 
@@ -31,7 +33,7 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var recyclerAdapter: RecyclerAdapter
+    private val recyclerAdapter: RecyclerAdapter by lazy { RecyclerAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +54,16 @@ class MainActivity : AppCompatActivity() {
 
     /**Initializing recyclerView */
     private fun initRecyclerView() {
-        recyclerAdapter =
-            RecyclerAdapter()
         binding.recyclerView.apply {
             setHasFixedSize(true) // setting it to true if all the items are have a fixed height and width, this allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
             isNestedScrollingEnabled = false
-            //        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL)); // Divider decorations
+            val spacingInPixels = resources.getDimensionPixelSize(R.dimen.size_36dp)
+            addItemDecoration(
+                VerticalItemDecorator(
+                    this@MainActivity,
+                    paddingStarting = spacingInPixels
+                )
+            )
             adapter = recyclerAdapter
         }
     }
@@ -95,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             /** adding dummy data into the List */
         }
         //dummy data ends here
-        recyclerAdapter.submitListItem(mListItems)
+        recyclerAdapter.submitList(mListItems)
     }
     /**
      * For Pagination check : https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b
@@ -108,12 +114,11 @@ class MainActivity : AppCompatActivity() {
         /**@params -> position to where we need to add the item, NOTE : It is optional
          * @params -> passing the values into the model class
          */
-        val typeValue: Int //for to determine which recycler layoutOut view has to populate
-        typeValue = if (position % 2 == 0) {
+        val typeValue: Int = if (position % 2 == 0) {
             0
         } else {
             1
-        }
+        } //for to determine which recycler layoutOut view has to populate
         val modelClass = ModelClass("Heading$position", " New Item", typeValue, position)
         recyclerAdapter.addItem(modelClass, position)
     }
@@ -141,7 +146,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
-                recyclerAdapter.removeItem(viewHolder.adapterPosition) // Passing the position into the remove function
+                recyclerAdapter.removeItem(viewHolder.bindingAdapterPosition) // Passing the position into the remove function
             }
         }).attachToRecyclerView(recyclerView) // Attach it to the recycler view
     }
