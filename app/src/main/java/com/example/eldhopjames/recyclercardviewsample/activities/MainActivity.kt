@@ -102,6 +102,8 @@ class MainActivity : AppCompatActivity() {
         }
         //dummy data ends here
         recyclerAdapter.submitList(mListItems)
+        binding.recyclerView.scheduleLayoutAnimation() // use this if anim not working only
+
     }
     /**
      * For Pagination check : https://medium.com/@etiennelawlor/pagination-with-recyclerview-1cb7e66a502b
