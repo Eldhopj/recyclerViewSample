@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     /**Initializing recyclerView */
     private fun initRecyclerView() {
-        binding.recyclerView.apply {
+        binding.recyclerView.run {
             setHasFixedSize(true) // setting it to true if all the items are have a fixed height and width, this allows some optimization to our view , avoiding validations when mRecyclerAdapter content changes
             isNestedScrollingEnabled = false
             val spacingInPixels = resources.getDimensionPixelSize(R.dimen.size_36dp)

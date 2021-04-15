@@ -23,14 +23,14 @@ class OddViewHolder(
     //Binding of data happens in here
     fun bindData(item: ModelClass) {
         this.item = item
-        with(item) {
+        item.run {
             heading.text = head
             description.text = desc
         }
     }
 
     override fun onClick(v: View) {
-        val position = adapterPosition // Get the index of the view holder
+        val position = bindingAdapterPosition // Get the index of the view holder
         if (position == RecyclerView.NO_POSITION) { // Makes sure this position is still valid
             return
         }
