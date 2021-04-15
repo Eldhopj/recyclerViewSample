@@ -21,7 +21,7 @@ class OddViewHolder(
     }
 
     //Binding of data happens in here
-    fun bindData(item: ModelClass) {
+    internal fun bindData(item: ModelClass) {
         this.item = item
         item.run {
             heading.text = head
