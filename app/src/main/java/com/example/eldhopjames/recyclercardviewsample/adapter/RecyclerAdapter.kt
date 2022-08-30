@@ -72,6 +72,7 @@ class RecyclerAdapter :
         }
     }
 
+    //TODO: Migrate in favor of merge adapter
     override fun getItemViewType(position: Int): Int {
         if (getItem(position).type == 0) {
             return VIEW_TYPE_ODD

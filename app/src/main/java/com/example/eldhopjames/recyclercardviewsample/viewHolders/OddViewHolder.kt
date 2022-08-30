@@ -7,13 +7,11 @@ import com.example.eldhopjames.recyclercardviewsample.databinding.OddListItemBin
 import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 
 class OddViewHolder(
-    binding: OddListItemBinding, // with the help of "itemView" we ge the views from xml
+    private val binding: OddListItemBinding, // with the help of "itemView" we ge the views from xml
     private val listener: ((ModelClass, Int) -> Unit)?
 ) :
     ViewHolder(binding.root), View.OnClickListener {
 
-    private val heading = binding.heading
-    private val description = binding.description
     private var item: ModelClass? = null
 
     init {
@@ -23,10 +21,7 @@ class OddViewHolder(
     //Binding of data happens in here
     internal fun bindData(item: ModelClass) {
         this.item = item
-        item.run {
-            heading.text = head
-            description.text = desc
-        }
+        binding.model = item
     }
 
     override fun onClick(v: View) {

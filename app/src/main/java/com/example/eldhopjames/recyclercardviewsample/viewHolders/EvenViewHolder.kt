@@ -8,13 +8,11 @@ import com.example.eldhopjames.recyclercardviewsample.modelClass.ModelClass
 
 //View Holder class caches these references that gonna modify in the adapter
 class EvenViewHolder(
-    binding: EvenListItemBinding, // with the help of "itemView" we ge the views from xml
+    private val binding: EvenListItemBinding, // with the help of "itemView" we ge the views from xml
     private val listener: ((ModelClass, Int) -> Unit)?
 ) :
     ViewHolder(binding.root), View.OnClickListener {
 
-    private val heading = binding.heading
-    private val description = binding.description
     private var item: ModelClass? = null
 
     init {
@@ -24,10 +22,7 @@ class EvenViewHolder(
     //Binding of data happens in here
     internal fun bindData(item: ModelClass) {
         this.item = item
-        item.run {
-            heading.text = head
-            description.text = desc
-        }
+        binding.model = item
     }
 
     override fun onClick(v: View) {

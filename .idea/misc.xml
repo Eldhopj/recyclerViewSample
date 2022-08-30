@@ -5,6 +5,17 @@
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/AndroidStudioProjects/recyclerViewSample/app/src/main/res/layout/activity_detailed.xml" value="0.19375" />
+        <entry key="..\:/AndroidStudioProjects/recyclerViewSample/app/src/main/res/layout/activity_main.xml" value="0.19375" />
+        <entry key="..\:/AndroidStudioProjects/recyclerViewSample/app/src/main/res/layout/even_list_item.xml" value="0.19375" />
+        <entry key="..\:/AndroidStudioProjects/recyclerViewSample/app/src/main/res/layout/item_empty.xml" value="0.19375" />
+        <entry key="..\:/AndroidStudioProjects/recyclerViewSample/app/src/main/res/layout/odd_list_item.xml" value="0.19375" />
+      </map>
+    </option>
+  </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="org.jetbrains.annotations.Nullable" />
     <option name="myDefaultNotNull" value="androidx.annotation.NonNull" />
@@ -50,7 +61,7 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
